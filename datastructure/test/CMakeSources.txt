@@ -1,0 +1,21 @@
+cmake_minimum_required( VERSION 2.8.3 )
+
+cmake_policy(SET CMP0011 NEW)
+
+project ( COMMON_DATASTRUCTURE_TEST )
+
+include_directories ( ${COMMON_DATASTRUCTURE_DIR};
+                      ${A7C_UNIT_TEST_INCLUDE_DIR};
+                    )
+
+# Source files
+set ( COMMON_DATASTRUCTURE_TEST_SOURCES
+        ${COMMON_DATASTRUCTURE_TEST_DIR}/CHashMapTest.cpp;
+        ${COMMON_DATASTRUCTURE_TEST_DIR}/CHashMapTestObject.cpp;
+        ${COMMON_DATASTRUCTURE_TEST_DIR}/CCommonDataStructureTestSuite.cpp;
+    )
+
+set ( COMMON_DATASTRUCTURE_TEST_MAIN_SOURCES
+        ${COMMON_DATASTRUCTURE_TEST_DIR}/CCommonDataStructureTestMain.cpp;     
+)
+

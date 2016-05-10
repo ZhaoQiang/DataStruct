@@ -1,0 +1,15 @@
+cmake_minimum_required( VERSION 2.8.3 )
+
+cmake_policy(SET CMP0011 NEW)
+
+project ( COMMON_DATASTRUCTURE )
+
+include_directories (
+                    )
+
+# Source files
+set ( COMMON_DATASTRUCTURE_SOURCES
+        ${COMMON_DATASTRUCTURE_DIR}/CHashMap.cpp;
+        ${COMMON_DATASTRUCTURE_DIR}/IHashable.cpp;
+        ${COMMON_DATASTRUCTURE_DIR}/CStack.cpp;
+    )

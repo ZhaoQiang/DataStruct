@@ -1,0 +1,111 @@
+###############################################################################
+# File         : GNUmakefile
+# Author       : brucema
+# Contents     : Makefile for testLFF test harness
+###############################################################################
+# (C) COPYRIGHT 2008 AGILENT TECHNOLOGIES UK LTD. ALL RIGHTS RESERVED.
+# NO PART OF THIS PROGRAM MAY BE PHOTOCOPIED REPRODUCED OR TRANSLATED
+# TO ANOTHER PROGRAM LANGUAGE WITHOUT THE PRIOR WRITTEN CONSENT OF
+# AGILENT TECHNOLOGIES UK LTD.
+###############################################################################
+
+# Common definitions and rules
+#
+include ../../../../../etc/Makefile.common
+
+SRCLIST    := main.cpp testLFF.cpp testCLFF.cpp
+OBJS       := $(OBJLIST)
+TARGETBINS := testLFF
+BINS       := $(BINLIST)
+PUREBINS   := $(addsuffix .pure, $(BINS))
+QUANTBINS  := $(addsuffix .quant, $(BINS))
+PURECOVBINS:= $(addsuffix .purecov, $(BINS))
+PURECOMBINEDBINS:= $(addsuffix .purecombined, $(BINS))
+
+ARVLIBS := ../../../AsdThread/libAsdThread.a
+UTRAN_ARCHIVES := $(ARVLIST)
+
+# Augment preprocessor/compiler/linker flags
+#
+# Preprocessor - includes and defines.
+CPPFLAGS	+= -I.. -I../../../AsdThread -I../../bitops 
+
+ifeq ($(TARGET_OS), Linux)
+ifeq ($(TARGET_ARCH), x86-MT)
+CPPFLAGS += -march=i686
+LDFLAGS	+= -march=i686
+else
+ifeq ($(TARGET_ARCH), x86)
+CPPFLAGS += -march=i686
+LDFLAGS	+= -march=i686
+endif
+endif
+endif
+
+
+# C++ Compiler flags
+#
+#CXXFLAGS	+= 
+
+# Linker flags and libraries.  Flags are before the files to link,
+# libs go after the files to link.  Libs should only contain the names
+# of the libraries to link against (eg -lpcap or liblocal.a). They are
+# separate - keep them that way.
+#
+# LDFLAGS	+=
+LDLIBS	+= 	$(UTRAN_ARCHIVES) -lpthread
+
+.PHONY: all libs bins bins.pure bins.quant clean links
+
+# cannot build these in parallel because they rebuild the same siblings
+
+.NOTPARALLEL: $(PRBBIN) $(PRBBIN).pure $(PRBBIN).quant
+
+all:  testbins
+
+bins: $(BINS)
+
+testbins: $(BINS).purecombined
+
+bins.pure: $(PUREBINS)
+
+bins.quant: $(QUANTBINS)
+
+bins.purecov: $(PURECOVBINS)
+
+bins.purecombined: $(PURECOMBINEDBINS)
+
+bins.pure: $(BINS).pure
+
+bins.quant: $(BINS).quant
+
+$(BINS): $(OBJS) $(WHAT_OBJ)
+	$(LINK_EXECUTABLE) $(LINKEXEFLAGS)
+
+$(PUREBINS): $(OBJS) $(WHAT_OBJ)
+	$(PURE_LINK_EXECUTABLE) $(LINKEXEFLAGS)
+
+$(QUANTBINS): $(OBJS) $(WHAT_OBJ)
+	$(QUANTIFY_LINK_EXECUTABLE) $(LINKEXEFLAGS)
+
+$(PURECOVBINS): $(OBJS) $(WHAT_OBJ)
+	$(PURECOV_LINK_EXECUTABLE) $(LINKEXEFLAGS)
+
+$(PURECOMBINEDBINS): $(OBJS) $(WHAT_OBJ)
+	$(PURECOMBINED_LINK_EXECUTABLE) $(LINKEXEFLAGS)
+
+runtests: 
+	./$(PURECOMBINEDBINS)
+
+
+clean:
+	rm -f $(BINS) \
+              $(PUREBINS) \
+              $(QUANTBINS) \
+              $(PURECOVBINS) \
+              $(PURECOMBINEDBINS) \
+              *.pcv \
+              .pure.* \
+              *.o.*
+
+

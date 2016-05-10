@@ -1,0 +1,23 @@
+cmake_minimum_required( VERSION 2.8.3 )
+
+cmake_policy(SET CMP0011 NEW)
+
+project ( COMMON_TEST )
+
+add_definitions( -DOBJPOOL_DEBUG_DISABLE_ASSERT=1 )
+
+include_directories ( ${COMMON_DATASTRUCTURE_THREADSAFE_DIR};
+                      ${MEB_INCLUDE_DIR};
+                      ${LOG4CXX_INCLUDE_DIR};
+                      ${A7C_UNIT_TEST_INCLUDE_DIR};
+                    )
+
+# Source files
+set ( COMMON_DATA_STRUCTURE_THREAD_SAFE_TEST_SOURCES
+        ${COMMON_DATASTRUCTURE_THREADSAFE_TEST_DIR}/CCommonDataStructureThreadSafeTestSuite.cpp;
+        ${COMMON_DATASTRUCTURE_THREADSAFE_TEST_DIR}/CLFFifoTest.cpp;
+    )
+set ( COMMON_DATA_STRUCTURE_THREAD_SAFE_TEST_MAIN_SOURCES
+        ${COMMON_DATASTRUCTURE_THREADSAFE_TEST_DIR}/CCommonDataStructureThreadSafeTestMain.cpp;     
+    )
+
